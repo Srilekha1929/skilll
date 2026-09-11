@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>{{center.center_name}}</h1><p class="muted">Training Center ID: <strong>{{center.center_code}}</strong>. This workspace shows only this center's programs and trainees.</p></div>
+<div class="grid"><div class="card"><h3>Center ID</h3><div class="stat smallstat">{{center.center_code}}</div></div>
+<div class="card"><h3>My Trainees</h3><div class="stat">{{trainees|length}}</div></div>
+<div class="card"><h3>My Programs</h3><div class="stat">{{programs|length}}</div></div></div>
+<div class="grid2"><div class="panel"><h2>Create Program</h2><form method="post" action="{{url_for('add_program')}}"><div class="form-grid">
+<div class="field"><label>Program Name</label><input name="name" required></div><div class="field"><label>Provider</label><input name="provider" value="{{center.center_name}}"></div>
+<div class="field"><label>Duration</label><input name="duration"></div><div class="field"><label>Seats</label><input type="number" name="seats" value="20"></div>
+<div class="field full"><label>Skills</label><input name="skills"></div><div class="field full"><label>Eligibility</label><input name="eligibility"></div>
+<div class="field"><label>Start Date</label><input type="date" name="start_date"></div><div class="field"><label>Status</label><select name="status"><option>Open</option><option>Upcoming</option><option>Closed</option></select></div>
+<div class="full"><button class="btn">Create Program</button></div></div></form></div>
+<div class="panel"><h2>Center Details</h2><p><b>ID:</b> {{center.center_code}}</p><p><b>Email:</b> {{center.email}}</p><p><b>District:</b> {{center.district}}</p><p><b>Courses:</b> {{center.courses}}</p></div></div>
+<div class="panel section"><h2>My Trainees</h2><table class="table"><tr><th>Trainee ID</th><th>Name</th><th>Email</th><th>Course</th><th>Attendance</th><th>Status</th><th></th></tr>
+{% for t in trainees %}<tr><td>{{t.trainee_code}}</td><td>{{t.name}}</td><td>{{t.email}}</td><td>{{t.course}}</td><td>{{t.attendance}}%</td><td>{{t.status}}</td><td><a href="{{url_for('trainee_details',trainee_id=t.id)}}">View</a></td></tr>{% endfor %}</table></div>
+<div class="panel section"><h2>My Programs</h2><table class="table"><tr><th>Program</th><th>Duration</th><th>Seats</th><th>Status</th></tr>
+{% for p in programs %}<tr><td>{{p.name}}</td><td>{{p.duration}}</td><td>{{p.seats}}</td><td>{{p.status}}</td></tr>{% endfor %}</table></div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>{{employer.company}}</h1><p class="muted">Employer ID: <strong>{{employer.employer_code}}</strong> | Login: {{account.email if account else employer.email}}</p></div>
+<div class="grid">
+<div class="card"><h3>Industry</h3><div class="stat smallstat">{{employer.industry}}</div></div>
+<div class="card"><h3>Location</h3><div class="stat smallstat">{{employer.location}}</div></div>
+<div class="card"><h3>Jobs Posted</h3><div class="stat">{{jobs|length}}</div></div>
+</div>
+<div class="panel"><h2>Employer Details</h2><p><b>Phone:</b> {{employer.phone}}</p><p><b>Email:</b> {{employer.email}}</p><p><b>Created:</b> {{employer.created_at}}</p></div>
+<div class="panel section"><h2>Job Opportunities</h2><table class="table"><tr><th>Role</th><th>Skills</th><th>Location</th><th>Salary</th></tr>
+{% for j in jobs %}<tr><td>{{j.title}}</td><td>{{j.skills}}</td><td>{{j.location}}</td><td>{{j.salary}}</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

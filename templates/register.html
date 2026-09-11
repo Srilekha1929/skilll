@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Register - Skilling Outcomes Platform</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+<style>
+.reg-wrap{max-width:850px;margin:40px auto;padding:0 20px}
+.reg-card{background:#fff;border-radius:18px;padding:28px;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+.role-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.role-tabs label{border:1px solid #dfe4ea;border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-weight:600}
+.role-tabs input{display:none}
+.role-tabs label:has(input:checked){border-color:#4f46e5;background:#f1f0ff}
+.reg-section{display:none}
+.reg-section.active{display:block}
+.id-help{font-size:13px;color:#687386;margin-top:5px}
+</style>
+</head>
+<body>
+<nav>
+<div class="brand">Skilling Outcomes Platform</div>
+<div><a href="/login">Login</a><a href="/">Home</a></div>
+</nav>
+
+<div class="reg-wrap">
+<div class="reg-card">
+<h1>Create Account</h1>
+<p class="muted">Choose your account type. Trainees use their Training Center ID. Existing Training Centers and Employers use the ID created by Admin.</p>
+
+<form method="post">
+<div class="role-tabs">
+<label><input type="radio" name="account_type" value="trainee" checked onchange="showSection('trainee')">Trainee</label>
+<label><input type="radio" name="account_type" value="training" onchange="showSection('training')">Training Center</label>
+<label><input type="radio" name="account_type" value="employer" onchange="showSection('employer')">Employer</label>
+</div>
+
+<div id="trainee" class="reg-section active">
+<h2>Trainee Registration</h2>
+<p class="id-help">Your Trainee ID will be generated automatically after registration.</p>
+<div class="form-grid">
+<div class="field"><label>Name *</label><input name="name"></div>
+<div class="field"><label>Training Center ID *</label>
+<select name="training_center_code">
+<option value="">Select Training Center ID</option>
+{% for c in centers %}<option value="{{c.center_code}}">{{c.center_code}} - {{c.center_name}}</option>{% endfor %}
+</select></div>
+<div class="field"><label>Email *</label><input type="email" name="trainee_email" required></div>
+<div class="field"><label>Phone</label><input name="phone"></div>
+<div class="field"><label>District</label><input name="district"></div>
+<div class="field"><label>Education</label><input name="education"></div>
+<div class="field"><label>Course</label><input name="course" placeholder="Python & Data Analytics"></div>
+<div class="field full"><label>Current Skills</label><input name="skills" placeholder="Python, Excel, C, Java"></div>
+</div>
+</div>
+
+<div id="training" class="reg-section">
+<h2>Training Center Account</h2>
+<p class="id-help">Enter the Training Center ID created by Admin. The email must match the center record.</p>
+<div class="form-grid">
+<div class="field full"><label>Training Center ID *</label>
+<select name="training_center_code">
+<option value="">Select Training Center ID</option>
+{% for c in centers %}<option value="{{c.center_code}}">{{c.center_code}} - {{c.center_name}}</option>{% endfor %}
+</select></div>
+<div class="field full"><label>Registered Email *</label><input type="email" name="training_email"></div>
+</div>
+</div>
+
+<div id="employer" class="reg-section">
+<h2>Employer Account</h2>
+<p class="id-help">Enter the Employer ID created by Admin. The email must match the employer record.</p>
+<div class="form-grid">
+<div class="field full"><label>Employer ID *</label>
+<select name="employer_code">
+<option value="">Select Employer ID</option>
+{% for e in employers %}<option value="{{e.employer_code}}">{{e.employer_code}} - {{e.company}}</option>{% endfor %}
+</select></div>
+<div class="field full"><label>Registered Email *</label><input type="email" name="employer_email"></div>
+</div>
+</div>
+
+<div class="form-grid" style="margin-top:18px">
+<div class="field"><label>Password *</label><input type="password" name="password" required></div>
+<div class="field"><label>Confirm Password *</label><input type="password" name="confirm_password" required></div>
+<div class="full"><button class="btn" type="submit">Create Account</button></div>
+</div>
+</form>
+
+<p class="id-help" style="margin-top:20px"><b>Important:</b> Admin creates new Training Center IDs and Employer IDs. Registration connects an existing ID to its login account; it does not create a new organization.</p>
+</div>
+</div>
+
+<script>
+function showSection(id){
+ document.querySelectorAll('.reg-section').forEach(x=>{
+   x.classList.remove('active');
+   x.querySelectorAll('input,select').forEach(i=>i.disabled=true);
+ });
+ const section=document.getElementById(id);
+ section.classList.add('active');
+ section.querySelectorAll('input,select').forEach(i=>i.disabled=false);
+}
+showSection('trainee');
+</script>
+</body>
+</html>

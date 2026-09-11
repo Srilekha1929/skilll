@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Skilling Outcomes Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px 0;
+        }
+
+        /* HEADER */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .primary-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* STAT CARDS */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .blue .stat-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .green .stat-icon {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .purple .stat-icon {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .orange .stat-icon {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .stat-card p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card h2 {
+            font-size: 28px;
+        }
+
+        /* DASHBOARD GRID */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* PANEL */
+
+        .panel {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .panel-header h3 {
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .panel-header p {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* CHART */
+
+        .chart-container {
+            height: 320px;
+            position: relative;
+        }
+
+        /* QUALITY */
+
+        .quality-item {
+            margin-bottom: 25px;
+        }
+
+        .quality-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 9px;
+        }
+
+        .quality-top span {
+            color: #4b5563;
+            font-size: 14px;
+        }
+
+        .quality-top strong {
+            font-size: 15px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: #2563eb;
+        }
+
+        /* IMPACT */
+
+        .impact-box {
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 12px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+        }
+
+        .impact-box small {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .impact-box h2 {
+            color: #2563eb;
+            margin-top: 6px;
+            font-size: 30px;
+        }
+
+        /* TABLE */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 15px 14px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 14px;
+        }
+
+        .person {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mini-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .person strong {
+            display: block;
+        }
+
+        .person small {
+            color: #9ca3af;
+            display: block;
+            margin-top: 3px;
+        }
+
+        /* STATUS */
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .status.employed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status.self-employed {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .status.not-placed {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .arrow-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .arrow-btn:hover {
+            background: #dbeafe;
+        }
+
+        .view-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #64748b;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 95%;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Skilling Outcomes Dashboard
+            </h1>
+
+            <p>
+                Track training, employment and long-term outcomes
+            </p>
+
+        </div>
+
+        <a href="/add-trainee"
+           class="primary-btn">
+
+            + Add Trainee
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ================= STAT CARDS ================= -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card blue">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div>
+
+                <p>
+                    Total Trainees
+                </p>
+
+                <h2>
+                    4
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat-card green">
+
+            <div class="stat-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <p>
+                    Employed
+                </p>
+
+                <h2>
+                    2
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat-card purple">
+
+            <div class="stat-icon">
+                💼
+            </div>
+
+            <div>
+
+                <p>
+                    Self Employed
+                </p>
+
+                <h2>
+                    1
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat-card orange">
+
+            <div class="stat-icon">
+                !
+            </div>
+
+            <div>
+
+                <p>
+                    Not Placed
+                </p>
+
+                <h2>
+                    1
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= CHART + QUALITY ================= -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- OUTCOME DISTRIBUTION -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>
+                        Outcome Distribution
+                    </h3>
+
+                    <p>
+                        Current trainee outcome status
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="outcomeChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TRAINING QUALITY -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>
+                        Training Quality
+                    </h3>
+
+                    <p>
+                        Overall training performance
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ATTENDANCE -->
+
+            <div class="quality-item">
+
+                <div class="quality-top">
+
+                    <span>
+                        Average Attendance
+                    </span>
+
+                    <strong>
+                        80%
+                    </strong>
+
+                </div>
+
+                <div class="progress">
+
+                    <div class="progress-bar"
+                         style="width: 80%;">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ASSESSMENT -->
+
+            <div class="quality-item">
+
+                <div class="quality-top">
+
+                    <span>
+                        Average Assessment
+                    </span>
+
+                    <strong>
+                        78%
+                    </strong>
+
+                </div>
+
+                <div class="progress">
+
+                    <div class="progress-bar"
+                         style="width: 78%;">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CERTIFICATION -->
+
+            <div class="quality-item">
+
+                <div class="quality-top">
+
+                    <span>
+                        Certified Trainees
+                    </span>
+
+                    <strong>
+                        4
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- IMPACT -->
+
+            <div class="impact-box">
+
+                <small>
+                    Livelihood Outcome Rate
+                </small>
+
+                <h2>
+                    75%
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= RECENT TRAINEES ================= -->
+
+    <div class="panel">
+
+
+        <div class="panel-header">
+
+            <div>
+
+                <h3>
+                    Recent Trainees
+                </h3>
+
+                <p>
+                    Latest trainee records
+                </p>
+
+            </div>
+
+
+            <a href="/trainees"
+               class="view-link">
+
+                View All →
+
+            </a>
+
+        </div>
+
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Trainee
+                        </th>
+
+                        <th>
+                            District
+                        </th>
+
+                        <th>
+                            Course
+                        </th>
+
+                        <th>
+                            Attendance
+                        </th>
+
+                        <th>
+                            Assessment
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    <!-- TRAINEE 1 -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="person">
+
+                                <div class="mini-avatar">
+                                    A
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Ananya Kumar
+                                    </strong>
+
+                                    <small>
+                                        ananya@example.com
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            Chennai
+                        </td>
+
+                        <td>
+                            Python & Data Analytics
+                        </td>
+
+                        <td>
+                            92%
+                        </td>
+
+                        <td>
+                            88%
+                        </td>
+
+                        <td>
+
+                            <span class="status employed">
+                                Employed
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="/trainee/1"
+                               class="arrow-btn">
+
+                                →
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- TRAINEE 2 -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="person">
+
+                                <div class="mini-avatar">
+                                    R
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Rahul Sharma
+                                    </strong>
+
+                                    <small>
+                                        rahul@example.com
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            Coimbatore
+                        </td>
+
+                        <td>
+                            Full Stack Development
+                        </td>
+
+                        <td>
+                            86%
+                        </td>
+
+                        <td>
+                            91%
+                        </td>
+
+                        <td>
+
+                            <span class="status employed">
+                                Employed
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="/trainee/2"
+                               class="arrow-btn">
+
+                                →
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- TRAINEE 3 -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="person">
+
+                                <div class="mini-avatar">
+                                    P
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Priya Devi
+                                    </strong>
+
+                                    <small>
+                                        priya@example.com
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            Madurai
+                        </td>
+
+                        <td>
+                            Digital Marketing
+                        </td>
+
+                        <td>
+                            78%
+                        </td>
+
+                        <td>
+                            72%
+                        </td>
+
+                        <td>
+
+                            <span class="status self-employed">
+                                Self-employed
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="/trainee/3"
+                               class="arrow-btn">
+
+                                →
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- TRAINEE 4 -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="person">
+
+                                <div class="mini-avatar">
+                                    A
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Arun Kumar
+                                    </strong>
+
+                                    <small>
+                                        arun@example.com
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            Salem
+                        </td>
+
+                        <td>
+                            IoT & Embedded Systems
+                        </td>
+
+                        <td>
+                            65%
+                        </td>
+
+                        <td>
+                            61%
+                        </td>
+
+                        <td>
+
+                            <span class="status not-placed">
+                                Not Placed
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="/trainee/4"
+                               class="arrow-btn">
+
+                                →
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================= CHART SCRIPT ================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const chartElement =
+            document.getElementById("outcomeChart");
+
+
+        if (!chartElement) {
+            return;
+        }
+
+
+        const employed = 2;
+
+        const selfEmployed = 1;
+
+        const notPlaced = 1;
+
+
+        new Chart(
+            chartElement,
+            {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: [
+                        "Employed",
+                        "Self-employed",
+                        "Not Placed"
+                    ],
+
+                    datasets: [
+                        {
+
+                            data: [
+                                employed,
+                                selfEmployed,
+                                notPlaced
+                            ],
+
+                            backgroundColor: [
+                                "#22c55e",
+                                "#8b5cf6",
+                                "#f97316"
+                            ],
+
+                            borderWidth: 0
+
+                        }
+                    ]
+
+                },
+
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    cutout: "65%",
+
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "bottom"
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+);
+
+</script>
+
+
+</body>
+
+</html>

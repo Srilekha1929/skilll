@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>Login</h1><p class="muted">Use the account created for your role. Employer and Training Center accounts are created by Admin.</p></div>
+<div class="panel" style="max-width:560px"><form method="post"><div class="form-grid">
+<div class="field full"><label>Email</label><input type="email" name="email" required></div>
+<div class="field full"><label>Password</label><input type="password" name="password" required></div>
+<div class="full"><button class="btn">Login</button></div>
+</div></form>
+<hr>
+<p><b>Trainee:</b> create your own account using Registration.</p>
+<p><b>Employer:</b> Admin creates a separate Employer ID and login.</p>
+<p><b>Training Center:</b> Admin creates a separate Training Center ID and login.</p>
+<p><b>Admin:</b> central control account.</p>
+<a class="btn secondary" href="{{url_for('register')}}">Create Trainee Account</a>
+</div>{% endblock %}

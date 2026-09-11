@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>{{center.center_name}}</h1><p class="muted">Training Center ID: <strong>{{center.center_code}}</strong> | Login: {{account.email if account else center.email}}</p></div>
+<div class="grid">
+<div class="card"><h3>District</h3><div class="stat smallstat">{{center.district}}</div></div>
+<div class="card"><h3>Phone</h3><div class="stat smallstat">{{center.phone}}</div></div>
+<div class="card"><h3>Trainees</h3><div class="stat">{{trainees|length}}</div></div>
+<div class="card"><h3>Programs</h3><div class="stat">{{programs|length}}</div></div>
+</div>
+<div class="panel"><h2>Center Details</h2><p><b>Address:</b> {{center.address}}</p><p><b>Courses:</b> {{center.courses}}</p><p><b>Created:</b> {{center.created_at}}</p></div>
+<div class="panel section"><h2>Trainees under this Training Center</h2>
+<table class="table"><tr><th>Trainee ID</th><th>Name</th><th>Email</th><th>Course</th><th>Attendance</th><th>Assessment</th><th>Status</th><th></th></tr>
+{% for t in trainees %}<tr><td>{{t.trainee_code}}</td><td>{{t.name}}</td><td>{{t.email}}</td><td>{{t.course}}</td><td>{{t.attendance}}%</td><td>{{t.assessment}}</td><td>{{t.status}}</td><td><a href="{{url_for('trainee_details',trainee_id=t.id)}}">View</a></td></tr>{% endfor %}
+</table></div>
+<div class="panel section"><h2>Programs</h2><table class="table"><tr><th>Program</th><th>Duration</th><th>Seats</th><th>Status</th></tr>
+{% for p in programs %}<tr><td>{{p.name}}</td><td>{{p.duration}}</td><td>{{p.seats}}</td><td>{{p.status}}</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

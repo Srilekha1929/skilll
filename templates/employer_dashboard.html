@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>{{employer.company}}</h1><p class="muted">Employer Platform ID: <strong>{{employer.employer_code}}</strong>. You are logged into this employer only.</p></div>
+<div class="grid"><div class="card"><h3>Industry</h3><div class="stat smallstat">{{employer.industry}}</div></div>
+<div class="card"><h3>Location</h3><div class="stat smallstat">{{employer.location}}</div></div>
+<div class="card"><h3>My Jobs</h3><div class="stat">{{jobs|length}}</div></div></div>
+<div class="grid2"><div class="panel"><h2>Post Job</h2><form method="post" action="{{url_for('add_job')}}"><div class="form-grid">
+<div class="field"><label>Job Title</label><input name="title" required></div><div class="field"><label>Location</label><input name="location"></div>
+<div class="field full"><label>Skills</label><input name="skills"></div><div class="field"><label>Salary</label><input name="salary"></div>
+<div class="full"><button class="btn">Post Job</button></div></div></form></div>
+<div class="panel"><h2>Account</h2><p><b>Employer ID:</b> {{employer.employer_code}}</p><p><b>Login:</b> {{employer.email}}</p><p><b>Phone:</b> {{employer.phone}}</p></div></div>
+<div class="panel section"><h2>My Job Opportunities</h2><table class="table"><tr><th>Role</th><th>Skills</th><th>Location</th><th>Salary</th></tr>
+{% for j in jobs %}<tr><td>{{j.title}}</td><td>{{j.skills}}</td><td>{{j.location}}</td><td>{{j.salary}}</td></tr>{% endfor %}</table></div>
+{% endblock %}

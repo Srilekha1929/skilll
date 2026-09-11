@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>{% if current_role=='training' %}My Trainees{% else %}All Trainees{% endif %}</h1><p class="muted">Trainee ID, training-center assignment and current outcome status.</p></div>
+<div class="panel"><form method="get"><input name="search" value="{{search}}" placeholder="Search name, district, course or status"><button class="btn">Search</button></form></div>
+<div class="panel section"><table class="table"><tr><th>Trainee ID</th><th>Name</th><th>Email</th><th>Course</th><th>Training Center</th><th>Status</th><th></th></tr>
+{% for t in trainees %}<tr><td><strong>{{t.trainee_code}}</strong></td><td>{{t.name}}</td><td>{{t.email}}</td><td>{{t.course}}</td><td>{{t.center_code or 'Not assigned'}}</td><td>{{t.status}}</td><td><a href="{{url_for('trainee_details',trainee_id=t.id)}}">View Details</a></td></tr>{% endfor %}
+</table></div>{% endblock %}

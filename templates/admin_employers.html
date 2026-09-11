@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>Employer Platforms</h1><p class="muted">Every employer has a separate Employer ID and login account.</p></div>
+<div class="panel"><table class="table"><tr><th>Employer ID</th><th>Company</th><th>Email</th><th>Industry</th><th>Location</th><th>Jobs</th><th></th></tr>
+{% for e in employers %}<tr><td><strong>{{e.employer_code}}</strong></td><td>{{e.company}}</td><td>{{e.email}}</td><td>{{e.industry}}</td><td>{{e.location}}</td><td>{{e.job_count}}</td><td><a class="btn small" href="{{url_for('employer_details',employer_id=e.id)}}">View</a></td></tr>{% endfor %}
+</table></div>{% endblock %}

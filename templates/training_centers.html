@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>Training Centers</h1><p class="muted">Every center has a separate ID and login account.</p></div>
+<div class="panel"><table class="table"><tr><th>Center ID</th><th>Name</th><th>Email</th><th>District</th><th>Trainees</th><th></th></tr>
+{% for c in centers %}<tr><td><strong>{{c.center_code}}</strong></td><td>{{c.center_name}}</td><td>{{c.email}}</td><td>{{c.district}}</td><td>{{c.trainee_count}}</td><td><a class="btn small" href="{{url_for('training_center_details',center_id=c.id)}}">View</a></td></tr>{% endfor %}
+</table></div>{% endblock %}

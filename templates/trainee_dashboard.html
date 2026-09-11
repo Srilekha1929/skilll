@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skilling Outcomes Platform</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<nav><div class="brand">Skilling Outcomes Platform</div><div>
+<a href="/">Home</a>{% if session.get('user_id') %}<a href="/dashboard">Dashboard</a><a href="/logout">Logout</a>{% else %}<a href="/login">Login</a><a href="/register">Register</a>{% endif %}
+</div></nav><main class="container">
+{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="alert {{'error' if category=='error' else ''}}">{{message}}</div>{% endfor %}{% endwith %}
+
+<div class="hero"><h1>Welcome, {{ trainee['name'] }}</h1><p class="muted">This is your personal trainee dashboard. You can only see your own trainee record.</p>
+<div class="top-actions"><a class="btn secondary" href="/trainee/{{ trainee['id'] }}">My Full Record</a></div></div>
+
+<div class="panel section skill-panel">
+  <div class="panel-head">
+    <div><h2>Skill Gap Analysis</h2><p class="muted">Compare your current skills with the skills taught in available courses.</p></div>
+  </div>
+  <form method="post" action="{{url_for('update_skill_profile')}}" class="skill-form">
+    <div class="field full"><label>My Current Skills</label><input name="skills" value="{{ trainee['skills'] or '' }}" placeholder="Example: Python, Excel, C, Java"></div>
+    <button class="btn" type="submit">Update Skills & Analyze</button>
+  </form>
+  {% if current_skills %}<p><b>Skills considered:</b> {{ current_skills|join(', ') }}</p>{% else %}<p class="muted">Add your current skills to get a more accurate recommendation.</p>{% endif %}
+</div>
+
+<div class="panel section">
+  <div class="panel-head"><div><h2>Recommended Training Courses</h2><p class="muted">Recommendations are based on missing skills and current employer demand.</p></div></div>
+  <div class="recommend-grid">
+  {% for r in recommendations[:3] %}
+    <div class="recommend-card {% if loop.first %}top-recommend{% endif %}">
+      {% if loop.first %}<span class="rec-label">BEST MATCH</span>{% endif %}
+      <h3>{{r.program.name}}</h3>
+      <p class="muted">{{r.program.provider}} · {{r.program.duration}}</p>
+      <div class="rec-score">{{r.score}}% <span>recommendation score</span></div>
+      <p><b>Skills you have:</b> {{r.matched|join(', ') if r.matched else 'None matched yet'}}</p>
+      <p><b>Skill gap:</b> {{r.missing|join(', ') if r.missing else 'No major gap'}}</p>
+      <p><b>Why this course?</b> {{r.reason}}</p>
+      <p><b>Course skills:</b> {{r.program.skills}}</p>
+      <form method="post" action="{{url_for('trainee_program', program_id=r.program.id)}}"><button class="btn success">Show Interest</button></form>
+    </div>
+  {% else %}<p class="muted">No course with skill data is available yet. Ask your training center to publish course skills.</p>{% endfor %}
+  </div>
+</div>
+
+<div class="grid">
+<div class="card"><h3>My Profile</h3><p><b>Email:</b> {{ trainee['email'] }}</p><p><b>District:</b> {{ trainee['district'] or 'Not added' }}</p><p><b>Education:</b> {{ trainee['education'] or 'Not added' }}</p><p><b>Course:</b> {{ trainee['course'] or 'Not added' }}</p></div>
+<div class="card"><h3>My Progress</h3><div class="stat">{{ trainee['attendance'] or 0 }}%</div><p class="muted">Attendance</p><div class="stat">{{ trainee['assessment'] or 0 }}%</div><p class="muted">Assessment</p></div>
+<div class="card"><h3>My Status</h3><p><span class="badge">{{ trainee['certification'] }}</span></p><p><b>Outcome:</b> {{ trainee['status'] }}</p></div>
+</div>
+<div class="card"><h2>Available Training Programs</h2><table><tr><th>Program</th><th>Provider</th><th>Duration</th><th>Skills</th><th></th></tr>{% for p in programs %}<tr><td>{{p['name']}}</td><td>{{p['provider']}}</td><td>{{p['duration']}}</td><td>{{p['skills']}}</td><td><form style="padding:0;box-shadow:none" method="post" action="/trainee/program/{{p['id']}}"><button class="btn success">Interested</button></form></td></tr>{% endfor %}</table></div>
+<div class="card"><h2>Job Opportunities</h2><table><tr><th>Role</th><th>Company</th><th>Skills</th><th>Location</th><th>Salary</th></tr>{% for j in jobs %}<tr><td>{{j['title']}}</td><td>{{j['company']}}</td><td>{{j['skills']}}</td><td>{{j['location']}}</td><td>{{j['salary']}}</td></tr>{% else %}<tr><td colspan="5">No jobs posted yet.</td></tr>{% endfor %}</table></div>
+</main></body></html>

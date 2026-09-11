@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skilling Outcomes Platform</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<nav><div class="brand">Skilling Outcomes Platform</div><div>
+<a href="/">Home</a>{% if session.get('user_id') %}<a href="/dashboard">Dashboard</a><a href="/logout">Logout</a>{% else %}<a href="/login">Login</a><a href="/register">Register</a>{% endif %}
+</div></nav><main class="container">
+{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="alert {{'error' if category=='error' else ''}}">{{message}}</div>{% endfor %}{% endwith %}
+
+<div class="hero"><h1>{{trainee['name']}}</h1><p class="muted">Trainee ID: <strong>{{trainee.trainee_code}}</strong> | Training Center: {{trainee.center_code or 'Not assigned'}}</p><p class="muted">{{trainee['email']}} · {{trainee['course']}}</p></div>
+<div class="panel section">
+<h2>Skill Gap & Course Recommendation</h2>
+<p><b>Current skills:</b> {{ current_skills|join(', ') if current_skills else 'Not provided' }}</p>
+{% if recommendations %}
+{% set r=recommendations[0] %}
+<p><b>Recommended course:</b> {{r.program.name}} <span class="badge">{{r.score}}% match</span></p>
+<p><b>Skill gap:</b> {{r.missing|join(', ') if r.missing else 'No major gap'}}</p>
+<p><b>Recommendation reason:</b> {{r.reason}}</p>
+{% else %}<p class="muted">No recommendation available yet.</p>{% endif %}
+</div>
+<div class="grid"><div class="card"><h3>Profile</h3><p>Phone: {{trainee['phone']}}</p><p>District: {{trainee['district']}}</p><p>Education: {{trainee['education']}}</p><p>Provider: {{trainee['provider']}}</p></div><div class="card"><h3>Progress</h3><p>Attendance: <b>{{trainee['attendance']}}%</b></p><p>Assessment: <b>{{trainee['assessment']}}%</b></p><p>Certificate: {{trainee['certification']}}</p><p>Status: {{trainee['status']}}</p></div></div>
+<div class="card"><h2>Employment Outcomes</h2><table><tr><th>Outcome</th><th>Employer</th><th>Role</th><th>Salary</th><th>Relevance</th></tr>{% for o in outcomes %}<tr><td>{{o['outcome_type']}}</td><td>{{o['employer']}}</td><td>{{o['job_role']}}</td><td>{{o['salary']}}</td><td>{{o['training_relevance']}}%</td></tr>{% else %}<tr><td colspan="5">No outcomes recorded.</td></tr>{% endfor %}</table></div>
+<div class="card"><h2>Follow-ups</h2><table><tr><th>Period</th><th>Status</th><th>Salary</th><th>Role</th><th>Remarks</th></tr>{% for f in followups %}<tr><td>{{f['followup_period']}}</td><td>{{f['employment_status']}}</td><td>{{f['salary']}}</td><td>{{f['job_role']}}</td><td>{{f['remarks']}}</td></tr>{% else %}<tr><td colspan="5">No follow-ups recorded.</td></tr>{% endfor %}</table></div>
+</main></body></html>

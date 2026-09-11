@@ -1,0 +1,53 @@
+{% extends "base.html" %}{% block content %}
+<div class="hero"><h1>Admin Dashboard</h1><p class="muted">Central view of trainees, training centers and employer platforms.</p>
+<div class="top-actions"><a class="btn" href="/add-trainee">Create Trainee</a><a class="btn secondary" href="/admin/training-centers">Training Centers</a><a class="btn secondary" href="/admin/employers">Employer Platforms</a></div></div>
+
+<div class="grid">
+<div class="card"><h3>Total Trainees</h3><div class="stat">{{total}}</div></div>
+<div class="card"><h3>Training Centers</h3><div class="stat">{{centers|length}}</div></div>
+<div class="card"><h3>Employer Platforms</h3><div class="stat">{{employers|length}}</div></div>
+<div class="card"><h3>Employed</h3><div class="stat">{{employed}}</div></div>
+<div class="card"><h3>Certified</h3><div class="stat">{{certified}}</div></div>
+<div class="card"><h3>Placement / Livelihood</h3><div class="stat">{{placement}}%</div></div>
+</div>
+
+<div class="grid2">
+<div class="panel"><h2>Create Training Center</h2>
+<form method="post" action="{{url_for('admin_add_training_center')}}"><div class="form-grid">
+<div class="field"><label>Center Name</label><input name="center_name" required></div>
+<div class="field"><label>Login Email</label><input type="email" name="email" required></div>
+<div class="field"><label>Login Password</label><input name="password" value="center123"></div>
+<div class="field"><label>Phone</label><input name="phone"></div>
+<div class="field"><label>District</label><input name="district"></div>
+<div class="field"><label>Address</label><input name="address"></div>
+<div class="field full"><label>Courses</label><input name="courses" placeholder="Python, Java, Full Stack"></div>
+<div class="full"><button class="btn">Create Training Center + Unique ID</button></div>
+</div></form></div>
+
+<div class="panel"><h2>Create Employer Platform</h2>
+<form method="post" action="{{url_for('admin_add_employer')}}"><div class="form-grid">
+<div class="field"><label>Company</label><input name="company" required></div>
+<div class="field"><label>Login Email</label><input type="email" name="email" required></div>
+<div class="field"><label>Login Password</label><input name="password" value="employer123"></div>
+<div class="field"><label>Phone</label><input name="phone"></div>
+<div class="field"><label>Industry</label><input name="industry"></div>
+<div class="field"><label>Location</label><input name="location"></div>
+<div class="full"><button class="btn">Create Employer Platform + Unique ID</button></div>
+</div></form></div>
+</div>
+
+<div class="panel section"><h2>Training Centers</h2>
+<table class="table"><tr><th>ID</th><th>Center</th><th>Email</th><th>District</th><th>Trainees</th><th>Programs</th><th></th></tr>
+{% for c in centers %}<tr><td><strong>{{c.center_code}}</strong></td><td>{{c.center_name}}</td><td>{{c.email}}</td><td>{{c.district}}</td><td>{{c.trainee_count}}</td><td>{{c.program_count}}</td><td><a class="btn small" href="{{url_for('training_center_details',center_id=c.id)}}">View Details</a></td></tr>{% endfor %}
+</table></div>
+
+<div class="panel section"><h2>Employer Platforms</h2>
+<table class="table"><tr><th>ID</th><th>Company</th><th>Email</th><th>Industry</th><th>Location</th><th>Jobs</th><th></th></tr>
+{% for e in employers %}<tr><td><strong>{{e.employer_code}}</strong></td><td>{{e.company}}</td><td>{{e.email}}</td><td>{{e.industry}}</td><td>{{e.location}}</td><td>{{e.job_count}}</td><td><a class="btn small" href="{{url_for('employer_details',employer_id=e.id)}}">View Details</a></td></tr>{% endfor %}
+</table></div>
+
+<div class="panel section"><h2>All Trainees</h2>
+<table class="table"><tr><th>Trainee ID</th><th>Name</th><th>Email</th><th>Course</th><th>Training Center</th><th>Status</th><th></th></tr>
+{% for t in trainees %}<tr><td><strong>{{t.trainee_code}}</strong></td><td>{{t.name}}</td><td>{{t.email}}</td><td>{{t.course}}</td><td>{{t.center_code or 'Not assigned'}}</td><td>{{t.status}}</td><td><a class="btn small" href="{{url_for('trainee_details',trainee_id=t.id)}}">View Details</a></td></tr>{% endfor %}
+</table></div>
+{% endblock %}
